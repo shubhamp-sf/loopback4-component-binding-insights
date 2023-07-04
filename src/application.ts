@@ -1,12 +1,13 @@
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
+import {RepositoryMixin} from '@loopback/repository';
+import {RestApplication} from '@loopback/rest';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
+import {CoreComponent, SFCoreBindings} from '@sourceloop/core';
 import path from 'path';
 import {MySequence} from './sequence';
 
@@ -20,6 +21,15 @@ export class ComponentBindingInsightsApplication extends BootMixin(
 
     // Set up the custom sequence
     this.sequence(MySequence);
+
+    this.component(CoreComponent);
+
+    this.bind(SFCoreBindings.config).to({
+      name: 'woo',
+    });
+
+    // some sourceloop service component calling it again
+    this.component(CoreComponent);
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
